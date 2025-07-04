@@ -12,11 +12,14 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     assetsDir: 'assets',
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          charts: ['chart.js', 'react-chartjs-2'],
+        },
         assetFileNames: 'assets/[name]-[hash][extname]',
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',
@@ -28,6 +31,7 @@ export default defineConfig({
     strictPort: true,
   },
   optimizeDeps: {
+    include: ['react', 'react-dom'],
     exclude: ['@vitejs/plugin-react'],
   },
 })

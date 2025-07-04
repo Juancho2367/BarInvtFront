@@ -1,109 +1,98 @@
-# Bar Inventory Management System
+# Sistema de Inventario - Frontend
 
-A modern web application for managing bar inventory, sales, clients, and events. Built with React, TypeScript, and Tailwind CSS.
+Sistema de gestión de inventario para bar desarrollado con React, TypeScript, Vite y Tailwind CSS.
 
-## Features
+## 🚀 Deploy en Vercel
 
-- **Inventory Management**
-  - Track product stock levels
-  - Set minimum stock alerts
-  - Manage suppliers and categories
-  - Track product movements
+### Configuración Automática
 
-- **Sales Management**
-  - Record sales transactions
-  - Support for different payment methods
-  - Credit sales tracking
-  - Sales history and analytics
+1. **Conectar con Vercel:**
+   - Ve a [vercel.com](https://vercel.com)
+   - Conecta tu repositorio de GitHub
+   - Selecciona la carpeta `front` como directorio raíz
 
-- **Client Management**
-  - Client profiles and history
-  - Credit limits and balances
-  - Purchase history
-  - Payment tracking
-
-- **Calendar & Events**
-  - Event scheduling
-  - Event impact on sales
-  - Stock predictions for events
-  - Event type categorization
-
-- **Reports & Analytics**
-  - Sales trends and forecasts
-  - Product performance
-  - Customer insights
-  - Inventory reports
-
-## Tech Stack
-
-- **Frontend**
-  - React 18
-  - TypeScript
-  - Tailwind CSS
-  - Chart.js for visualizations
-  - React Router for navigation
-  - Zustand for state management
-
-- **Backend** (to be implemented)
-  - Node.js
-  - Express
-  - MongoDB
-  - Prisma ORM
-  - JWT Authentication
-
-## Getting Started
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/bar-inventory-app.git
-   cd bar-inventory-app
+2. **Variables de Entorno (Opcional):**
+   ```env
+   VITE_API_URL=https://tu-backend.vercel.app/api
+   VITE_APP_NAME=Sistema de Inventario
    ```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+3. **Deploy Automático:**
+   - Vercel detectará automáticamente que es un proyecto Vite
+   - Usará el script `build` del package.json
+   - Compilará desde el código fuente en `src/`
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+### Configuración Manual
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser.
+Si necesitas configurar manualmente:
 
-## Project Structure
+1. **Framework Preset:** Vite
+2. **Build Command:** `npm run build`
+3. **Output Directory:** `dist`
+4. **Install Command:** `npm install`
 
-```
-front/
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/         # Page components
-│   ├── services/      # API services
-│   ├── types/         # TypeScript types
-│   ├── hooks/         # Custom React hooks
-│   ├── store/         # State management
-│   ├── utils/         # Utility functions
-│   └── assets/        # Static assets
-├── public/            # Public files
-└── ...config files
+## 🛠️ Desarrollo Local
+
+```bash
+# Instalar dependencias
+npm install
+
+# Ejecutar en desarrollo
+npm run dev
+
+# Construir para producción
+npm run build
+
+# Previsualizar build
+npm run preview
 ```
 
-## Development
+## 📁 Estructura del Proyecto
 
-- **Code Style**: Follow the TypeScript and React best practices
-- **Component Structure**: Use functional components with hooks
-- **State Management**: Use Zustand for global state
-- **Styling**: Use Tailwind CSS utility classes
-- **Type Safety**: Maintain strict TypeScript types
+```
+src/
+├── components/     # Componentes reutilizables
+│   ├── UI/        # Componentes de interfaz
+│   ├── Inventory/ # Componentes específicos de inventario
+│   ├── Sales/     # Componentes específicos de ventas
+│   └── ...
+├── pages/         # Páginas de la aplicación
+├── hooks/         # Custom hooks
+├── services/      # Servicios API
+├── types/         # Tipos TypeScript
+└── utils/         # Utilidades
+```
 
-## Contributing
+## 🎨 Tecnologías
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- **React 19** - Framework de UI
+- **TypeScript** - Tipado estático
+- **Vite** - Build tool y dev server
+- **Tailwind CSS** - Framework de estilos
+- **React Router** - Enrutamiento
+- **Chart.js** - Gráficos
+- **Zustand** - Gestión de estado
 
-## License
+## 🔧 Configuración de Vercel
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+El proyecto está configurado para funcionar correctamente en Vercel con:
+
+- **vercel.json** - Configuración de build y rutas
+- **.vercelignore** - Archivos excluidos del deploy
+- **React Router** - Configurado para SPA
+- **Assets** - Optimizados para CDN
+
+## 📱 Características
+
+- ✅ Dashboard con estadísticas
+- ✅ Gestión de inventario
+- ✅ Sistema de ventas
+- ✅ Gestión de clientes
+- ✅ Calendario de eventos
+- ✅ Reportes y análisis
+- ✅ Diseño responsive
+- ✅ Tema personalizable
+
+## 🚀 Deploy Status
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tu-usuario/inventario-bar&project-name=inventario-bar-frontend)

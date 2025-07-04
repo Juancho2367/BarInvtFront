@@ -9,28 +9,18 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "headers": [
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1",
-      "headers": {
-        "Content-Type": "application/javascript"
-      }
-    },
-    {
-      "src": "/assets/(.*\\.css)",
-      "dest": "/assets/$1",
-      "headers": {
-        "Content-Type": "text/css"
-      }
-    },
-    {
-      "src": "/vite.svg",
-      "dest": "/vite.svg"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 } 
