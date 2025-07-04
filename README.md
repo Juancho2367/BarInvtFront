@@ -2,6 +2,33 @@
 
 Sistema de gestión de inventario para bar desarrollado con React, TypeScript, Vite y Tailwind CSS.
 
+## 🔐 Autenticación
+
+**¡IMPORTANTE!** La aplicación ahora requiere autenticación obligatoria.
+
+### Credenciales de Acceso
+- **Usuario**: `admin`
+- **Contraseña**: `admin123`
+
+### Características de Seguridad
+- ✅ Login obligatorio al acceder
+- ✅ Rutas protegidas
+- ✅ Persistencia de sesión
+- ✅ Logout funcional
+- ✅ Redirección automática
+
+## 📱 Páginas Habilitadas
+
+Actualmente solo están disponibles:
+- ✅ **Inventory** - Gestión de inventario
+- ✅ **Reports** - Reportes y análisis
+
+### Páginas Temporalmente Deshabilitadas
+- ❌ Dashboard
+- ❌ Sales  
+- ❌ Clients
+- ❌ Calendar
+
 ## 🚀 Deploy en Vercel
 
 ### Configuración Automática
@@ -45,6 +72,9 @@ npm run build
 
 # Previsualizar build
 npm run preview
+
+# Verificar configuración de deploy
+npm run deploy-check
 ```
 
 ## 📁 Estructura del Proyecto
@@ -53,10 +83,13 @@ npm run preview
 src/
 ├── components/     # Componentes reutilizables
 │   ├── UI/        # Componentes de interfaz
-│   ├── Inventory/ # Componentes específicos de inventario
-│   ├── Sales/     # Componentes específicos de ventas
-│   └── ...
+│   └── ProtectedRoute.tsx # Protección de rutas
+├── context/       # Contextos de React
+│   └── AuthContext.tsx    # Contexto de autenticación
 ├── pages/         # Páginas de la aplicación
+│   ├── Login.tsx  # Página de login
+│   ├── Inventory.tsx # Gestión de inventario
+│   └── Reports.tsx # Reportes
 ├── hooks/         # Custom hooks
 ├── services/      # Servicios API
 ├── types/         # Tipos TypeScript
@@ -84,14 +117,17 @@ El proyecto está configurado para funcionar correctamente en Vercel con:
 
 ## 📱 Características
 
-- ✅ Dashboard con estadísticas
+- ✅ Sistema de autenticación completo
 - ✅ Gestión de inventario
-- ✅ Sistema de ventas
-- ✅ Gestión de clientes
-- ✅ Calendario de eventos
 - ✅ Reportes y análisis
 - ✅ Diseño responsive
 - ✅ Tema personalizable
+- ✅ Rutas protegidas
+- ✅ Persistencia de sesión
+
+## 🔐 Documentación de Autenticación
+
+Para más detalles sobre el sistema de autenticación, consulta [AUTHENTICATION.md](./AUTHENTICATION.md)
 
 ## 🚀 Deploy Status
 

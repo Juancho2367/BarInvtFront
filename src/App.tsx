@@ -1,36 +1,65 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/UI/Layout';
 import Notification from './components/UI/Notification';
 import Loading from './components/UI/Loading';
 import ErrorBoundary from './components/UI/ErrorBoundary';
 
 // Lazy load pages
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Login = React.lazy(() => import('./pages/Login'));
 const Inventory = React.lazy(() => import('./pages/Inventory'));
-const Sales = React.lazy(() => import('./pages/Sales'));
-const Clients = React.lazy(() => import('./pages/Clients'));
-const Calendar = React.lazy(() => import('./pages/Calendar'));
 const Reports = React.lazy(() => import('./pages/Reports'));
 
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
-      <Router>
-        <Layout>
+      <AuthProvider>
+        <Router>
           <React.Suspense fallback={<Loading fullScreen />}>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/inventory" element={<Inventory />} />
-              <Route path="/sales" element={<Sales />} />
-              <Route path="/clients" element={<Clients />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/reports" element={<Reports />} />
+              {/* Login route - no protegida */}
+              <Route path="/login" element={<Login />} />
+              
+              {/* Rutas protegidas */}
+              <Route
+                path="/inventory"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <Inventory />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <ProtectedRoute>
+                    <Layout>
+                      <Reports />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              
+              {/* Redirigir la ruta raíz a inventory */}
+              <Route
+                path="/"
+                element={<Navigate to="/inventory" replace />}
+              />
+              
+              {/* Redirigir cualquier otra ruta a inventory */}
+              <Route
+                path="*"
+                element={<Navigate to="/inventory" replace />}
+              />
             </Routes>
           </React.Suspense>
           <Notification />
-        </Layout>
-      </Router>
+        </Router>
+      </AuthProvider>
     </ErrorBoundary>
   );
 };
