@@ -5,6 +5,7 @@ interface User {
   username: string;
   email: string;
   role: string;
+  lastLogin?: string;
 }
 
 interface AuthContextType {
@@ -33,38 +34,73 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // API base URL
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
   // Verificar si hay un usuario guardado en localStorage al cargar
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
+    const savedToken = localStorage.getItem('token');
+    
+    if (savedUser && savedToken) {
       try {
         setUser(JSON.parse(savedUser));
+        // Verificar si el token sigue siendo válido
+        verifyToken(savedToken);
       } catch (error) {
         console.error('Error parsing saved user:', error);
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
     }
     setIsLoading(false);
   }, []);
 
+  const verifyToken = async (token: string) => {
+    try {
+      const response = await fetch(`${API_URL}/auth/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Token inválido');
+      }
+
+      const data = await response.json();
+      setUser(data.user);
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      setUser(null);
+    }
+  };
+
   const login = async (username: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
     try {
-      // Simulación de login - en producción esto sería una llamada a la API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Credenciales de prueba (en producción esto vendría del backend)
-      if (username === 'admin' && password === 'admin123') {
-        const userData: User = {
-          id: '1',
-          username: 'admin',
-          email: 'admin@bar.com',
-          role: 'admin'
-        };
-        
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Error en el login');
+      }
+
+      if (data.success && data.token && data.user) {
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('token', data.token);
         setIsLoading(false);
         return true;
       } else {
@@ -81,6 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   const value: AuthContextType = {

@@ -1,10 +1,15 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
+// Debug: Log the API URL being used
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+console.log('🔗 API URL:', apiUrl);
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
+  baseURL: apiUrl,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 second timeout
 });
 
 // Request interceptor
@@ -25,11 +30,24 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
+    console.error('❌ API Error:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      url: error.config?.url,
+      method: error.config?.method,
+      message: error.message
+    });
+
     if (error.response?.status === 401) {
       // Handle token refresh or logout
       localStorage.removeItem('token');
       window.location.href = '/login';
+    } else if (error.response?.status === 404) {
+      console.error('🔍 404 Error - Endpoint not found. Check if the backend is deployed correctly.');
+    } else if (error.code === 'ECONNABORTED') {
+      console.error('⏰ Request timeout. Check if the backend is responding.');
     }
+    
     return Promise.reject(error);
   }
 );
