@@ -14,6 +14,9 @@ interface AuthContextType {
   isLoading: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+  canAccessReports: () => boolean;
+  canAccessInventory: () => boolean;
+  getUserRole: () => string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -120,12 +123,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('token');
   };
 
+  // Utility functions for role-based access control
+  const canAccessReports = (): boolean => {
+    return user?.role === 'superadmin';
+  };
+
+  const canAccessInventory = (): boolean => {
+    return ['superadmin', 'admin', 'manager'].includes(user?.role || '');
+  };
+
+  const getUserRole = (): string => {
+    return user?.role || 'user';
+  };
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
     isLoading,
     login,
-    logout
+    logout,
+    canAccessReports,
+    canAccessInventory,
+    getUserRole
   };
 
   return (

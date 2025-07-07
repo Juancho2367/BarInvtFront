@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/UI/ProtectedRoute';
 import Layout from './components/UI/Layout';
 import Notification from './components/UI/Notification';
 import Loading from './components/UI/Loading';
@@ -26,7 +26,7 @@ const App: React.FC = () => {
               <Route
                 path="/inventory"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireInventoryAccess={true}>
                     <Layout>
                       <Inventory />
                     </Layout>
@@ -36,7 +36,7 @@ const App: React.FC = () => {
               <Route
                 path="/reports"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireReportsAccess={true}>
                     <Layout>
                       <Reports />
                     </Layout>
