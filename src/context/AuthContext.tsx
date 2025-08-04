@@ -37,8 +37,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // API base URL
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+  // API base URL - asegurar que no termine en /api para evitar doble barra
+  const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace(/\/api$/, '') + '/api';
 
   // Verificar si hay un usuario guardado en localStorage al cargar
   useEffect(() => {
