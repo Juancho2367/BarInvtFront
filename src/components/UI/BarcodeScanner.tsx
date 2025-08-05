@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import type { QrCodeSuccessCallback, QrCodeErrorCallback } from 'html5-qrcode';
+// Importamos los tipos correctos desde la librería
+import type { QrcodeSuccessCallback, QrcodeErrorCallback } from 'html5-qrcode';
 
 // Definimos las propiedades que recibirá el componente
 interface BarcodeScannerProps {
-  onScanSuccess: QrCodeSuccessCallback;
-  onScanFailure?: QrCodeErrorCallback;
+  onScanSuccess: QrcodeSuccessCallback;
+  onScanFailure?: QrcodeErrorCallback;
   className?: string;
 }
 
@@ -15,6 +16,15 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   className = ""
 }) => {
   useEffect(() => {
+    // Definimos una función de error por defecto si no se proporciona una
+    const defaultErrorHandler: QrcodeErrorCallback = (error: string) => {
+      // Podemos ignorar los errores comunes de "QR code not found"
+      // Solo logear errores importantes
+      if (!error.includes('No MultiFormat Readers') && !error.includes('QR code parse error')) {
+        console.warn('Scanner error:', error);
+      }
+    };
+
     // Creamos una nueva instancia del escáner
     const html5QrcodeScanner = new Html5QrcodeScanner(
       'barcode-reader', // ID del elemento div donde se renderizará
@@ -28,26 +38,19 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
     );
 
     // Callback de éxito mejorado
-    const handleSuccess: QrCodeSuccessCallback = (decodedText, decodedResult) => {
+    const handleSuccess: QrcodeSuccessCallback = (decodedText: string, decodedResult: any) => {
       // Limpiar el escáner después del éxito
       html5QrcodeScanner.clear().catch(console.error);
       onScanSuccess(decodedText, decodedResult);
     };
 
-    // Callback de error mejorado
-    const handleError: QrCodeErrorCallback = (error) => {
-      // Solo pasar errores importantes, no errores de "no se encontró código"
-      if (onScanFailure && !error.includes('No MultiFormat Readers')) {
-        onScanFailure(error);
-      }
-    };
-
     // Renderizamos el escáner y le pasamos los callbacks
-    html5QrcodeScanner.render(handleSuccess, handleError);
+    // Usamos el `onScanFailure` proporcionado o el nuestro por defecto
+    html5QrcodeScanner.render(handleSuccess, onScanFailure || defaultErrorHandler);
 
     // Función de limpieza que se ejecuta cuando el componente se desmonta
     return () => {
-      html5QrcodeScanner.clear().catch((error) => {
+      html5QrcodeScanner.clear().catch((error: any) => {
         console.error('Fallo al limpiar el escáner.', error);
       });
     };
