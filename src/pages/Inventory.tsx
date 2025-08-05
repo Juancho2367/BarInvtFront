@@ -153,11 +153,64 @@ const Inventory: React.FC = () => {
     setIsAddModalOpen(true);
   };
 
+  // Función auxiliar para limpiar y validar datos
+  const prepareDataForSend = () => {
+    const data = {
+      name: String(formData.name || '').trim(),
+      description: formData.description ? String(formData.description).trim() : undefined,
+      stock: parseInt(String(formData.stock || '0'), 10) || 0,
+      unit: String(formData.unit || '').trim(),
+      price: parseFloat(String(formData.price || '0')) || 0,
+      minStock: parseInt(String(formData.minStock || '0'), 10) || 0,
+      category: String(formData.category || 'Sin categoría'),
+      barcode: formData.barcode ? String(formData.barcode).trim() : undefined
+    };
+
+    // Remover campos undefined para evitar problemas
+    if (data.description === '') {
+      data.description = undefined;
+    }
+    if (!data.barcode) {
+      data.barcode = undefined;
+    }
+
+    return data;
+  };
+
   const handleSaveProduct = async () => {
     try {
+      const dataToSend = prepareDataForSend();
+
+      // Validar que los números son válidos
+      if (isNaN(dataToSend.stock) || dataToSend.stock < 0) {
+        notify.error('❌ Stock debe ser un número válido mayor o igual a 0');
+        return;
+      }
+      if (isNaN(dataToSend.price) || dataToSend.price < 0) {
+        notify.error('❌ Precio debe ser un número válido mayor o igual a 0');
+        return;
+      }
+      if (isNaN(dataToSend.minStock) || dataToSend.minStock < 0) {
+        notify.error('❌ Stock mínimo debe ser un número válido mayor o igual a 0');
+        return;
+      }
+
+      // Validar campos requeridos
+      if (!dataToSend.name) {
+        notify.error('❌ El nombre del producto es obligatorio');
+        return;
+      }
+      if (!dataToSend.unit) {
+        notify.error('❌ La unidad del producto es obligatoria');
+        return;
+      }
+
+      // Log para debug
+      console.log('Datos a enviar:', dataToSend);
+
       if (selectedProduct) {
         // Update existing product
-        await api.put(`/products/${selectedProduct.id}`, formData);
+        await api.put(`/products/${selectedProduct.id}`, dataToSend);
         
         // Verificar si el stock actualizado está bajo
         if (formData.stock <= formData.minStock) {
@@ -170,7 +223,7 @@ const Inventory: React.FC = () => {
         }
       } else {
         // Create new product
-        await api.post('/products', formData);
+        await api.post('/products', dataToSend);
         
         // Verificar si el nuevo producto tiene stock bajo
         if (formData.stock <= formData.minStock) {
@@ -187,10 +240,25 @@ const Inventory: React.FC = () => {
       await fetchProducts();
       setIsAddModalOpen(false);
       setSelectedProduct(null);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error saving product:', err);
-      notify.error('Error al guardar el producto');
-      setError('Error al guardar el producto');
+      
+      // Manejo específico de errores
+      if (err.response?.status === 400) {
+        const errorMessage = err.response?.data?.message || 'Error de validación en los datos';
+        notify.error(`❌ ${errorMessage}`);
+        setError(errorMessage);
+      } else if (err.response?.status === 404) {
+        notify.error('❌ Producto no encontrado');
+        setError('Producto no encontrado');
+      } else if (err.response?.status === 409) {
+        notify.error('❌ Ya existe un producto con esos datos');
+        setError('Conflicto: producto duplicado');
+      } else {
+        const genericError = 'Error al guardar el producto. Intenta nuevamente.';
+        notify.error(`❌ ${genericError}`);
+        setError(genericError);
+      }
     }
   };
 
