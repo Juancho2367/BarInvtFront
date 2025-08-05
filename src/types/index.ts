@@ -4,10 +4,10 @@ export interface Product {
   description?: string;
   stock: number;
   unit: string;
-  supplier: string;
   price: number;
   minStock: number;
   category: string;
+  barcode?: string;
   createdAt: Date;
   updatedAt: Date;
 }

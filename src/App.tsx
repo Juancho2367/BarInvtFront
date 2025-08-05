@@ -11,6 +11,7 @@ import ErrorBoundary from './components/UI/ErrorBoundary';
 const Login = React.lazy(() => import('./pages/Login'));
 const Inventory = React.lazy(() => import('./pages/Inventory'));
 const Reports = React.lazy(() => import('./pages/Reports'));
+const BarcodeConfig = React.lazy(() => import('./pages/BarcodeConfig'));
 
 const App: React.FC = () => {
   return (
@@ -39,6 +40,18 @@ const App: React.FC = () => {
                   <ProtectedRoute requireReportsAccess={true}>
                     <Layout>
                       <Reports />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
+              
+              {/* Ruta especial para configuración de códigos de barras */}
+              <Route
+                path="/configuracionbarras"
+                element={
+                  <ProtectedRoute requireInventoryAccess={true}>
+                    <Layout>
+                      <BarcodeConfig />
                     </Layout>
                   </ProtectedRoute>
                 }

@@ -43,11 +43,11 @@ const Dashboard: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-gray-900">Panel de Control</h1>
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-0">
+      <h1 className="text-xl sm:text-2xl font-semibold text-gray-900">Panel de Control</h1>
       
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Stats Grid - More Mobile Friendly */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <div
             key={stat.name}
@@ -85,22 +85,33 @@ const Dashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Chart */}
-      <div className="rounded-lg bg-white p-6 shadow">
+      {/* Chart - Responsive */}
+      <div className="rounded-lg bg-white p-4 sm:p-6 shadow">
         <h2 className="text-lg font-medium text-gray-900">Resumen de Ventas</h2>
-        <div className="mt-6" style={{ height: '300px' }}>
-          <Line data={chartData} options={{ maintainAspectRatio: false }} />
+        <div className="mt-4 sm:mt-6" style={{ height: '250px' }}>
+          <Line 
+            data={chartData} 
+            options={{ 
+              maintainAspectRatio: false,
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: window.innerWidth > 640
+                }
+              }
+            }} 
+          />
         </div>
       </div>
 
-      {/* Recent Activity */}
-      <div className="rounded-lg bg-white p-6 shadow">
+      {/* Recent Activity - Responsive */}
+      <div className="rounded-lg bg-white p-4 sm:p-6 shadow">
         <h2 className="text-lg font-medium text-gray-900">Actividad Reciente</h2>
-        <div className="mt-6 flow-root">
-          <ul role="list" className="-my-5 divide-y divide-gray-200">
+        <div className="mt-4 sm:mt-6 flow-root">
+          <ul role="list" className="-my-3 sm:-my-5 divide-y divide-gray-200">
             {[1, 2, 3].map((item) => (
-              <li key={item} className="py-4">
-                <div className="flex items-center space-x-4">
+              <li key={item} className="py-3 sm:py-4">
+                <div className="flex items-center space-x-3 sm:space-x-4">
                   <div className="flex-shrink-0">
                     <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary-100">
                       <span className="text-sm font-medium leading-none text-primary-600">
@@ -112,11 +123,11 @@ const Dashboard: React.FC = () => {
                     <p className="truncate text-sm font-medium text-gray-900">
                       Venta #{item} completada
                     </p>
-                    <p className="truncate text-sm text-gray-500">
+                    <p className="truncate text-xs sm:text-sm text-gray-500">
                       {new Date().toLocaleDateString()}
                     </p>
                   </div>
-                  <div>
+                  <div className="hidden sm:block">
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
                       Completada
                     </span>

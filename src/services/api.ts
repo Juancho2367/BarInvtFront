@@ -1,8 +1,9 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 // Debug: Log the API URL being used
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const apiUrl = (import.meta.env.VITE_API_URL || 'http://localhost:3000/api').replace(/\/api$/, '') + '/api';
 console.log('🔗 API URL:', apiUrl);
+console.log('🔗 Environment variable VITE_API_URL:', import.meta.env.VITE_API_URL);
 
 const api = axios.create({
   baseURL: apiUrl,
