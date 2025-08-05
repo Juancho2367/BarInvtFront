@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/UI/Button';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirigir automáticamente si ya está autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/inventory');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +27,12 @@ const Login: React.FC = () => {
     }
 
     const success = await login(username, password);
-    if (!success) {
+    if (success) {
+      // Pequeño delay para asegurar que el estado se actualice
+      setTimeout(() => {
+        navigate('/inventory');
+      }, 100);
+    } else {
       setError('Credenciales incorrectas. Usa: admin / admin123');
     }
   };
